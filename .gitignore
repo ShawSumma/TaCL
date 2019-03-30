@@ -1,4 +1,5 @@
 .vscode
 tach.exe
 callgrind*
+perf*
 out.bytecode

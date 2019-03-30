@@ -225,10 +225,6 @@ def fn_if(info, check, ifv, elsev=None):
         func = elsev
     info.call(func)
     return noreturn
-
-wlocals['proc'] = fn_proc
-wlocals['if'] = fn_if
-
 def fn_lte(info, x, y):
     return x <= y
 def fn_gt(info, x, y):
@@ -253,33 +249,37 @@ def fn_copy(info, x):
 
 nil = Nil()
 
-wlocals['set'] = fn_set
-wlocals['add'] = fn_add
-wlocals['sub'] = fn_sub
-wlocals['mul'] = fn_mul
-wlocals['div'] = fn_div
-wlocals['mod'] = fn_mod
-wlocals['lt'] = fn_lt
-wlocals['lte'] = fn_lte
-wlocals['gt'] = fn_gt
-wlocals['gte'] = fn_gte
-wlocals['eq'] = fn_eq
-wlocals['neq'] = fn_neq
-wlocals['print'] = fn_print
-wlocals['none'] = nil
-wlocals['copy'] = fn_copy
-wlocals['true'] = True
-wlocals['false'] = False
-wlocals['list'] = fn_list
-wlocals['exit'] = fn_exit
+wbuiltins = {}
+wbuiltins['proc'] = fn_proc
+wbuiltins['if'] = fn_if
+wbuiltins['set'] = fn_set
+wbuiltins['add'] = fn_add
+wbuiltins['sub'] = fn_sub
+wbuiltins['mul'] = fn_mul
+wbuiltins['div'] = fn_div
+wbuiltins['mod'] = fn_mod
+wbuiltins['lt'] = fn_lt
+wbuiltins['lte'] = fn_lte
+wbuiltins['gt'] = fn_gt
+wbuiltins['gte'] = fn_gte
+wbuiltins['eq'] = fn_eq
+wbuiltins['neq'] = fn_neq
+wbuiltins['print'] = fn_print
+wbuiltins['none'] = nil
+wbuiltins['copy'] = fn_copy
+wbuiltins['true'] = True
+wbuiltins['false'] = False
+wbuiltins['list'] = fn_list
+wbuiltins['exit'] = fn_exit
 
-wlocals = [wlocals, {}]
+wlocals = [wbuiltins, {}]
 
 def get(n):
+    if n in wlocals[0]:
+        return wlocals[0][n]
     for cur in wlocals[::-1]:
-        got = cur.get(n, None)
-        if got is not None:
-            return got
+        if n in cur:
+            return cur[n]
     raise NameError(f'no name \'{n}\'')
 
 class Vm:
@@ -411,6 +411,11 @@ def main(args):
                 ec = True                
             args = args[1:]
             sw = True
+        if args[1] == 'perf':
+            profile = True
+            args = args[1:]
+        else:
+            profile = False
         code = slurp(args[1])
         lines = parse(code)
         vm = Vm()
@@ -459,7 +464,12 @@ def main(args):
                     f.write('\n')
             f.close()
         else:
-            vm.vmrun(bc)
+            if profile:
+                import cProfile
+                func = lambda: vm.vmrun(bc)
+                cProfile.runctx('func()', globals(), locals())
+            else:
+                vm.vmrun(bc)
     else:
         while True:
             repl()
