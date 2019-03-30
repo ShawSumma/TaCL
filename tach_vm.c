@@ -141,7 +141,7 @@ void tach_vm_call(vm *state, tach_object *func, uint32_t argc, tach_object **arg
             if (state->callc + 4 >= state->calla) {
                 state->calla *= 1.5;
                 state->calls = tach_realloc(state->calls, sizeof(uint32_t) * state->calla);
-                state->world = tach_realloc(state->world, sizeof(tach_mapping *) * state->callc);
+                state->world = tach_realloc(state->world, sizeof(tach_mapping *) * state->calla);
             }
             state->calls[state->callc] = state->place;
             state->callc ++;
@@ -165,20 +165,14 @@ void tach_interp(program *prog) {
 
     while (state->place < prog->opcount) {
         uint32_t i = state->place;
-        printf("%s\n", tach_opcode_name(prog->opcodes[i]));
         switch (prog->opcodes[i]) {
             case OPCODE_NAME: {
                 char *name = prog->tach_strings[prog->opvalues[i]];
                 tach_object *nameobj = tach_create_tach_object_tach_string(tach_create_tach_string(name));
                 tach_object *obj = tach_get_tach_mapping(state->world[0], nameobj);
-                printf("stat %d\n", state->callc);
-                for (uint32_t i = state->callc; i > 0; i--) {
-                    if (obj != NULL) {
-                        break;
-                    }
+                for (uint32_t i = state->callc; i > 0 && obj == NULL; i--) {
                     obj = tach_get_tach_mapping(state->world[i], nameobj);
                 }
-                printf("done %d\n", state->callc);
                 if (obj == NULL) {
                     printf("error: no name %s\n", name);
                     exit(1);

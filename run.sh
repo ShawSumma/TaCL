@@ -1,7 +1,9 @@
-if clang -O3 *.c -o tach.exe -lgc
+if tcc -O3 *.c -o tach.exe -lgc
 then
     if python3 main.py -ec $1
     then
-        ./tach.exe
+        time ./tach.exe
     fi
+    rm out.bytecode
 fi
+rm tach.exe
