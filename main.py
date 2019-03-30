@@ -228,7 +228,6 @@ def fn_if(info, check, ifv, elsev=None):
 
 wlocals['proc'] = fn_proc
 wlocals['if'] = fn_if
-# wlocals['while'] = fn_while
 
 def fn_lte(info, x, y):
     return x <= y

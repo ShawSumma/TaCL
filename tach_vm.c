@@ -22,6 +22,10 @@ char *tach_opcode_name(opcode op) {
     }
 }
 
+void tach_vm_error(vm *state, char *err) {
+    state->error = tach_error_string(err);
+} 
+
 tach_mapping *tach_create_world_base() {
     tach_mapping *tach_mapping = tach_create_tach_mapping();
     tach_object
@@ -100,9 +104,9 @@ void tach_vm_push(vm *state, tach_object *o) {
 
 vm *tach_create_state() {
     vm *ret = tach_malloc(sizeof(vm));
-    ret->calla = 256;
+    ret->calla = 64;
     ret->callc = 0;
-    ret->stacka = 256;
+    ret->stacka = 64;
     ret->stackc = 0;
     
     ret->world = tach_malloc(sizeof(tach_mapping *) * ret->calla);
@@ -115,12 +119,21 @@ vm *tach_create_state() {
     return ret;
 }
 
+void tach_vm_except(vm *state) {
+    printf("error: %s\n", state->error->str);
+    state->error = NULL;
+    exit(1);
+}
+
 void tach_vm_call(vm *state, tach_object *func, uint32_t argc, tach_object **argv) {
     switch (func->type) {
         case TACH_OBJECT_TYPE_FUNC: {
             tach_object *result = func->value.func(state, argc, argv);
             if (result != NULL) {
                 tach_vm_push(state, result);
+            }
+            else if (state->error != NULL) {
+                tach_vm_except(state);
             }
             break;
         }
@@ -152,22 +165,24 @@ void tach_interp(program *prog) {
 
     while (state->place < prog->opcount) {
         uint32_t i = state->place;
+        printf("%s\n", tach_opcode_name(prog->opcodes[i]));
         switch (prog->opcodes[i]) {
             case OPCODE_NAME: {
                 char *name = prog->tach_strings[prog->opvalues[i]];
-                tach_object *obj = NULL;
                 tach_object *nameobj = tach_create_tach_object_tach_string(tach_create_tach_string(name));
-                for (uint32_t i = state->callc; i >= 0; i--) {
+                tach_object *obj = tach_get_tach_mapping(state->world[0], nameobj);
+                printf("stat %d\n", state->callc);
+                for (uint32_t i = state->callc; i > 0; i--) {
                     if (obj != NULL) {
-                        goto done;
+                        break;
                     }
                     obj = tach_get_tach_mapping(state->world[i], nameobj);
                 }
+                printf("done %d\n", state->callc);
                 if (obj == NULL) {
-                    printf("no name %s\n", name);
+                    printf("error: no name %s\n", name);
                     exit(1);
                 }
-                done:
                 tach_vm_push(state, obj);
                 break;
             }

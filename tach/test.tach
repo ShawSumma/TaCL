@@ -1,0 +1,6 @@
+proc recn n {
+    if [lt 0 $n] {
+        recn [add $n 1]
+    }
+}
+recn 10000

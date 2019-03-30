@@ -1,6 +1,9 @@
 #include "tach.h"
 
 bool tach_clib_equal(tach_object *a, tach_object *b) {
+    if (a == b) {
+        return true;
+    }
     if (a->type != b->type) {
         return false;
     }
