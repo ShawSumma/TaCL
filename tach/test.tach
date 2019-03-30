@@ -1,6 +1,4 @@
-proc recn n {
-    if [lt 0 $n] {
-        recn [sub $n 1]
-    }
+proc recursive x {
+    recursive [add $x 1]
 }
-recn 10000
+recursive 0

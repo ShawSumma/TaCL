@@ -10,11 +10,18 @@ struct tach_proc_t {
     uint32_t gotoval;
 };
 
+// struct tach_mapping {
+//     tach_object **key;
+//     tach_object **val;
+//     uint32_t size;
+//     uint32_t alloc;
+// };
+
 struct tach_mapping {
-    tach_object **key;
-    tach_object **val;
-    uint32_t size;
-    uint32_t alloc;
+    tach_object *key;
+    tach_object *val;
+    tach_mapping *left;
+    tach_mapping *right;
 };
 
 struct tach_vector {

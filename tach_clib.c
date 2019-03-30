@@ -8,6 +8,8 @@ bool tach_clib_equal(tach_object *a, tach_object *b) {
         return false;
     }
     switch (a->type) {
+         case TACH_OBJECT_TYPE_NIL:
+            return true;
         case TACH_OBJECT_TYPE_NUMBER:
             return a->value.num == b->value.num;
         case TACH_OBJECT_TYPE_tach_string:
@@ -15,16 +17,82 @@ bool tach_clib_equal(tach_object *a, tach_object *b) {
                 return false;
             }
             return !strcmp(a->value.str->str, b->value.str->str);
-        case TACH_OBJECT_TYPE_NIL:
-            return true;
-        case TACH_OBJECT_TYPE_FUNC:
-            return false;
         case TACH_OBJECT_TYPE_VECTOR:
+            return false;
+        case TACH_OBJECT_TYPE_FUNC:
             return false;
         case TACH_OBJECT_TYPE_PROC:
             return false;
         case TACH_OBJECT_TYPE_BOOL:
             return a->value.boolval == b->value.boolval;
+    }
+}
+
+bool tach_clib_less(tach_object *a, tach_object *b) {
+    if (a == b) {
+        return false;
+    }
+    if (a->type < b->type) {
+        return true;
+    }
+    if (a->type > b->type) {
+        return false;
+    }
+    switch (a->type) {
+         case TACH_OBJECT_TYPE_NIL:
+            return false;
+        case TACH_OBJECT_TYPE_NUMBER:
+            return a->value.num < b->value.num;
+        case TACH_OBJECT_TYPE_tach_string:
+            if (a->value.str->count < b->value.str->count) {
+                return true;
+            }
+            if (a->value.str->count > b->value.str->count) {
+                return false;
+            }
+            return !strcmp(a->value.str->str, b->value.str->str);
+        case TACH_OBJECT_TYPE_VECTOR:
+            return false;
+        case TACH_OBJECT_TYPE_FUNC:
+            return false;
+        case TACH_OBJECT_TYPE_PROC:
+            return false;
+        case TACH_OBJECT_TYPE_BOOL:
+            return a->value.boolval < b->value.boolval;
+    }
+}
+
+char tach_clib_cmp(tach_object *a, tach_object *b) {
+    if (a == b) {
+        return 0;
+    }
+    if (a->type < b->type) {
+        return -1;
+    }
+    if (a->type > b->type) {
+        return 1;
+    }
+    switch (a->type) {
+         case TACH_OBJECT_TYPE_NIL:
+            return 0;
+        case TACH_OBJECT_TYPE_NUMBER:
+            return a->value.num < b->value.num;
+        case TACH_OBJECT_TYPE_tach_string:
+            if (a->value.str->count < b->value.str->count) {
+                return -1;
+            }
+            if (a->value.str->count > b->value.str->count) {
+                return 1;
+            }
+            return strcmp(a->value.str->str, b->value.str->str);
+        case TACH_OBJECT_TYPE_VECTOR:
+            return 0;
+        case TACH_OBJECT_TYPE_FUNC:
+            return 0;
+        case TACH_OBJECT_TYPE_PROC:
+            return 0;
+        case TACH_OBJECT_TYPE_BOOL:
+            return a->value.boolval - b->value.boolval;
     }
 }
 
