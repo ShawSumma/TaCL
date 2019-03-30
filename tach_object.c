@@ -124,23 +124,18 @@ bool tach_set_tach_mapping(tach_mapping *t, tach_object *k, tach_object *v) {
 }
 
 tach_object *tach_get_tach_mapping(tach_mapping *t, tach_object *k) {
-    printf("\nstart\n");
     while (true) {
         if (t == NULL || t->key == NULL) {
             return NULL;
         }
-        tach_clib_println(stderr, t->key);
-        tach_clib_println(stderr, k);
         char cmp = tach_clib_cmp(k, t->key);
         if (cmp == 0) {
             return t->val;
         }
         if (cmp == -1) {
-            // printf("left\n");
             t = t->left;
         }
         if (cmp == 1) {
-            // printf("right\n");
             t = t->right;
         }
     }

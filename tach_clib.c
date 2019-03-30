@@ -77,14 +77,26 @@ char tach_clib_cmp(tach_object *a, tach_object *b) {
             return 0;
         case TACH_OBJECT_TYPE_NUMBER:
             return a->value.num < b->value.num;
-        case TACH_OBJECT_TYPE_tach_string:
-            if (a->value.str->count < b->value.str->count) {
+        case TACH_OBJECT_TYPE_tach_string: {
+            tach_string stra = *a->value.str;
+            tach_string strb = *b->value.str;
+            if (stra.count < strb.count) {
                 return -1;
             }
-            if (a->value.str->count > b->value.str->count) {
+            if (stra.count > stra.count) {
                 return 1;
             }
-            return strcmp(a->value.str->str, b->value.str->str);
+            for (uint32_t i = 0; i < stra.count; i++) {
+                if (stra.str[i] < strb.str[i]) {
+                    return -1;
+                
+                }
+                if (stra.str[i] > strb.str[i]) {
+                    return 1;
+                }
+            }
+            return 0;
+        }
         case TACH_OBJECT_TYPE_VECTOR:
             return 0;
         case TACH_OBJECT_TYPE_FUNC:
