@@ -1,4 +1,4 @@
-#include "tach_memory.h"
+#include "tach.h"
 
 void *tach_malloc(size_t size) {
     void *ret = GC_malloc(size);

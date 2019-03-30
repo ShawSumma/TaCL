@@ -3,8 +3,8 @@
 #include "tach.h"
 
 struct vm {
-    object **stack;
-    table **world;
+    tach_object **stack;
+    tach_mapping **world;
     uint32_t *calls;
     uint32_t calla;
     uint32_t callc;
@@ -18,11 +18,11 @@ struct program {
     opcode *opcodes;
     uint32_t *opvalues;
     double *numbers;
-    char **strings;
+    char **tach_strings;
 };
 
 char *tach_opcode_name(opcode op);
-void tach_vm_call(vm *state, object *func, uint32_t argc, object **argv);
+void tach_vm_call(vm *state, tach_object *func, uint32_t argc, tach_object **argv);
 void tach_interp(program *prog);
-table *tach_create_world_base();
+tach_mapping *tach_create_world_base();
 vm *tach_create_state();

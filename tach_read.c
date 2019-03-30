@@ -1,20 +1,19 @@
 
-#include "tach_read.h"
-#include <stdint.h>
+#include "tach.h"
 
 program *tach_read(FILE *f) {
     uint32_t alloc = 8;
     uint32_t numbera = 8;
-    uint32_t stringa = 8;
+    uint32_t tach_stringa = 8;
 
     uint32_t size = 0;
     uint32_t numberc = 0;
-    uint32_t stringc = 0;
+    uint32_t tach_stringc = 0;
 
     opcode *bytecode = tach_malloc(sizeof(opcode) * alloc);
     uint32_t *values = tach_malloc(sizeof(uint32_t) * alloc);
     double *numbers = tach_malloc(sizeof(double) * numbera);
-    char **strings = tach_malloc(sizeof(char*) * stringa);
+    char **tach_strings = tach_malloc(sizeof(char*) * tach_stringa);
 
     while (!feof(f)) {
         if (size + 4 >= alloc) {
@@ -26,9 +25,9 @@ program *tach_read(FILE *f) {
             numbera *= 1.5;
             numbers = tach_realloc(numbers, sizeof(double) * numbera);
         }
-        if (stringc + 4 >= stringa) {
-            stringa *= 1.5;
-            strings = tach_realloc(strings, sizeof(char*) * stringa);
+        if (tach_stringc + 4 >= tach_stringa) {
+            tach_stringa *= 1.5;
+            tach_strings = tach_realloc(tach_strings, sizeof(char*) * tach_stringa);
         }
         char opcode[20];
         int errc = fscanf(f, "%s\n", opcode);
@@ -37,9 +36,9 @@ program *tach_read(FILE *f) {
             int errc = fscanf(f, "%[^\n]", str);
             char *mstr = tach_malloc(sizeof(char)*strlen(str));
             strcpy(mstr, str);
-            strings[stringc] = mstr;
-            values[size] = stringc;
-            stringc ++;
+            tach_strings[tach_stringc] = mstr;
+            values[size] = tach_stringc;
+            tach_stringc ++;
             bytecode[size] = OPCODE_STR;
             size ++;
         }
@@ -48,9 +47,9 @@ program *tach_read(FILE *f) {
             int errc = fscanf(f, "%s\n", str);
             char *mstr = tach_malloc(sizeof(char)*strlen(str));
             strcpy(mstr, str);
-            strings[stringc] = mstr;
-            values[size] = stringc;
-            stringc ++;
+            tach_strings[tach_stringc] = mstr;
+            values[size] = tach_stringc;
+            tach_stringc ++;
             bytecode[size] = OPCODE_NAME;
             size ++;
         }
@@ -100,7 +99,7 @@ program *tach_read(FILE *f) {
     prog->opcodes = bytecode;
     prog->opvalues = values;
     prog->opcount = size;
-    prog->strings = strings;
+    prog->tach_strings = tach_strings;
     prog->numbers = numbers;
     return prog;
 }

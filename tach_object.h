@@ -2,58 +2,58 @@
 
 #include "tach.h"
 
-typedef object *(*func_t)(vm *, uint32_t, object **);
+typedef tach_object *(*func_t)(vm *, uint32_t, tach_object **);
 
-struct proc_t {
-    object **argn;
+struct tach_proc_t {
+    tach_object **argn;
     uint32_t argc;
     uint32_t gotoval;
 };
 
-struct table {
-    object **key;
-    object **val;
+struct tach_mapping {
+    tach_object **key;
+    tach_object **val;
     uint32_t size;
     uint32_t alloc;
 };
 
-struct vector {
-    object *children;
+struct tach_vector {
+    tach_object *children;
     uint32_t count;
 };
 
-struct string {
+struct tach_string {
     char *str;
     uint32_t count;
 };
 
-struct object {
+struct tach_object {
     enum {
-        TYPE_NIL,
-        TYPE_NUMBER,
-        TYPE_STRING,
-        TYPE_VECTOR,
-        TYPE_FUNC,
-        TYPE_PROC,
-        TYPE_BOOL,
+        TACH_OBJECT_TYPE_NIL,
+        TACH_OBJECT_TYPE_NUMBER,
+        TACH_OBJECT_TYPE_tach_string,
+        TACH_OBJECT_TYPE_VECTOR,
+        TACH_OBJECT_TYPE_FUNC,
+        TACH_OBJECT_TYPE_PROC,
+        TACH_OBJECT_TYPE_BOOL,
     } type;
     union {
-        string *str;
-        vector *vec;
-        proc_t *proc;
+        tach_string *str;
+        tach_vector *vec;
+        tach_proc_t *proc;
         func_t func;
         double num;
         bool boolval;
     } value;
 };
 
-table *tach_create_table();
-object *tach_create_object_nil();
-object *tach_create_object_string(string *str);
-object *tach_create_object_number(double d);
-object *tach_create_object_vector(vector *vec);
-object *tach_create_object_func(func_t func);
-object *tach_create_object_proc(uint32_t val);
-string *tach_create_string(char *);
-bool tach_set_table(table *t, object *k, object *v);
-object *tach_get_table(table *t, object *k);
+tach_mapping *tach_create_tach_mapping();
+tach_object *tach_create_tach_object_nil();
+tach_object *tach_create_tach_object_tach_string(tach_string *str);
+tach_object *tach_create_tach_object_number(double d);
+tach_object *tach_create_tach_object_tach_vector(tach_vector *vec);
+tach_object *tach_create_tach_object_func(func_t func);
+tach_object *tach_create_tach_object_proc(uint32_t val);
+tach_string *tach_create_tach_string(char *);
+bool tach_set_tach_mapping(tach_mapping *t, tach_object *k, tach_object *v);
+tach_object *tach_get_tach_mapping(tach_mapping *t, tach_object *k);

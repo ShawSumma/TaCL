@@ -24,16 +24,16 @@ enum opcode {
 };
 typedef enum opcode opcode;
 
-struct object;
-typedef struct object object;
-struct string;
-typedef struct string string;
-struct vector;
-typedef struct vector vector;
-struct table;
-typedef struct table table;
-struct proc_t;
-typedef struct proc_t proc_t;
+struct tach_object;
+typedef struct tach_object tach_object;
+struct tach_string;
+typedef struct tach_string tach_string;
+struct tach_vector;
+typedef struct tach_vector tach_vector;
+struct tach_mapping;
+typedef struct tach_mapping tach_mapping;
+struct tach_proc_t;
+typedef struct tach_proc_t tach_proc_t;
 
 #include "tach_clib.h"
 #include "tach_lib.h"
