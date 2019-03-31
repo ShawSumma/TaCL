@@ -12,6 +12,7 @@ struct vm {
     uint32_t stacka;
     uint32_t stackc;
     uint32_t place;
+    uint32_t backlevel;
 };
 
 struct program {

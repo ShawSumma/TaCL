@@ -1,0 +1,15 @@
+proc uplevel fn {
+    parent 3
+    eval [get fn]
+    child 3
+}
+
+proc incr n {
+    uplevel {
+        set [get n] [add [get [get n]] 1]
+    }
+}
+
+set x 10
+incr x
+print $x

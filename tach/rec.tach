@@ -1,4 +1,5 @@
 proc recursive x {
+    print $x
     recursive [add $x 1]
 }
 recursive 0

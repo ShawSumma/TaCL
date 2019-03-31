@@ -51,46 +51,6 @@ tach_object *tach_create_tach_object_proc(uint32_t val) {
     return ret;  
 }
 
-// tach_mapping *tach_create_tach_mapping() {
-//     tach_mapping *ret = tach_malloc(sizeof(tach_mapping));
-//     ret->alloc = 8;
-//     ret->size = 0;
-//     ret->key = tach_malloc(sizeof(tach_object *) * ret->alloc);
-//     ret->val = tach_malloc(sizeof(tach_object *) * ret->alloc);
-//     return ret;
-// }
-
-// void tach_insert_tach_mapping(tach_mapping *t, tach_object *k, tach_object *v) {
-//     if (t->size + 4 >= t->alloc) {
-//         t->alloc *= 1.5;
-//         t->key = tach_realloc(t->key, sizeof(tach_object *) * t->alloc);
-//         t->val = tach_realloc(t->val, sizeof(tach_object *) * t->alloc);
-//     }
-//     t->key[t->size] = k;
-//     t->val[t->size] = v;
-//     t->size ++;
-// }
-
-// bool tach_set_tach_mapping(tach_mapping *t, tach_object *k, tach_object *v) {
-//     for (uint32_t i = 0; i < t->size; i++) {
-//         if (tach_clib_equal(k, t->key[i])) {
-//             t->val[i] = v;
-//             return false;
-//         }
-//     }
-//     tach_insert_tach_mapping(t, k, v);
-//     return true;
-// }
-
-// tach_object *tach_get_tach_mapping(tach_mapping *t, tach_object *k) {
-//     for (uint32_t i = 0; i < t->size; i++) {
-//         if (tach_clib_equal(k, t->key[i])) {
-//             return t->val[i];
-//         }
-//     }
-//     return NULL;
-// }
-
 tach_mapping *tach_create_tach_mapping() {
     tach_mapping *ret = tach_malloc(sizeof(tach_mapping));
     ret->key = NULL;

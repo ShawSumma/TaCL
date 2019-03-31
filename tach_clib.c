@@ -1,65 +1,15 @@
 #include "tach.h"
 
 bool tach_clib_equal(tach_object *a, tach_object *b) {
-    if (a == b) {
-        return true;
-    }
-    if (a->type != b->type) {
-        return false;
-    }
-    switch (a->type) {
-         case TACH_OBJECT_TYPE_NIL:
-            return true;
-        case TACH_OBJECT_TYPE_NUMBER:
-            return a->value.num == b->value.num;
-        case TACH_OBJECT_TYPE_tach_string:
-            if (a->value.str->count != b->value.str->count) {
-                return false;
-            }
-            return !strcmp(a->value.str->str, b->value.str->str);
-        case TACH_OBJECT_TYPE_VECTOR:
-            return false;
-        case TACH_OBJECT_TYPE_FUNC:
-            return false;
-        case TACH_OBJECT_TYPE_PROC:
-            return false;
-        case TACH_OBJECT_TYPE_BOOL:
-            return a->value.boolval == b->value.boolval;
-    }
+    return tach_clib_cmp(a, b) == 0;
 }
 
 bool tach_clib_less(tach_object *a, tach_object *b) {
-    if (a == b) {
-        return false;
-    }
-    if (a->type < b->type) {
-        return true;
-    }
-    if (a->type > b->type) {
-        return false;
-    }
-    switch (a->type) {
-         case TACH_OBJECT_TYPE_NIL:
-            return false;
-        case TACH_OBJECT_TYPE_NUMBER:
-            return a->value.num < b->value.num;
-        case TACH_OBJECT_TYPE_tach_string:
-            if (a->value.str->count < b->value.str->count) {
-                return true;
-            }
-            if (a->value.str->count > b->value.str->count) {
-                return false;
-            }
-            return !strcmp(a->value.str->str, b->value.str->str);
-        case TACH_OBJECT_TYPE_VECTOR:
-            return false;
-        case TACH_OBJECT_TYPE_FUNC:
-            return false;
-        case TACH_OBJECT_TYPE_PROC:
-            return false;
-        case TACH_OBJECT_TYPE_BOOL:
-            return a->value.boolval < b->value.boolval;
-    }
+    return tach_clib_cmp(a, b) == -1;
+}
+
+bool tach_clib_greater(tach_object *a, tach_object *b) {
+    return tach_clib_cmp(a, b) == 1;
 }
 
 char tach_clib_cmp(tach_object *a, tach_object *b) {

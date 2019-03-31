@@ -62,6 +62,16 @@ tach_mapping *tach_create_world_base() {
     );
     tach_set_tach_mapping(
         tach_mapping,
+        tach_create_tach_object_tach_string(tach_create_tach_string("mul")),
+        tach_create_tach_object_func(tach_lib_mul)
+    );
+    tach_set_tach_mapping(
+        tach_mapping,
+        tach_create_tach_object_tach_string(tach_create_tach_string("div")),
+        tach_create_tach_object_func(tach_lib_div)
+    );
+    tach_set_tach_mapping(
+        tach_mapping,
         tach_create_tach_object_tach_string(tach_create_tach_string("if")),
         tach_create_tach_object_func(tach_lib_if)
     );
@@ -77,13 +87,48 @@ tach_mapping *tach_create_world_base() {
     );
     tach_set_tach_mapping(
         tach_mapping,
-        tach_create_tach_object_tach_string(tach_create_tach_string("true")),
-        trueobj
+        tach_create_tach_object_tach_string(tach_create_tach_string("gt")),
+        tach_create_tach_object_func(tach_lib_gt)
+    );
+    tach_set_tach_mapping(
+        tach_mapping,
+        tach_create_tach_object_tach_string(tach_create_tach_string("neq")),
+        tach_create_tach_object_func(tach_lib_neq)
     );
     tach_set_tach_mapping(
         tach_mapping,
         tach_create_tach_object_tach_string(tach_create_tach_string("copy")),
         tach_create_tach_object_func(tach_lib_copy)
+    );
+    tach_set_tach_mapping(
+        tach_mapping,
+        tach_create_tach_object_tach_string(tach_create_tach_string("parent")),
+        tach_create_tach_object_func(tach_lib_parent)
+    );
+    tach_set_tach_mapping(
+        tach_mapping,
+        tach_create_tach_object_tach_string(tach_create_tach_string("child")),
+        tach_create_tach_object_func(tach_lib_child)
+    );
+    tach_set_tach_mapping(
+        tach_mapping,
+        tach_create_tach_object_tach_string(tach_create_tach_string("eval")),
+        tach_create_tach_object_func(tach_lib_eval)
+    );
+    tach_set_tach_mapping(
+        tach_mapping,
+        tach_create_tach_object_tach_string(tach_create_tach_string("get")),
+        tach_create_tach_object_func(tach_lib_get)
+    );
+    tach_set_tach_mapping(
+        tach_mapping,
+        tach_create_tach_object_tach_string(tach_create_tach_string("depth")),
+        tach_create_tach_object_func(tach_lib_depth)
+    );
+    tach_set_tach_mapping(
+        tach_mapping,
+        tach_create_tach_object_tach_string(tach_create_tach_string("true")),
+        trueobj
     );
     tach_set_tach_mapping(
         tach_mapping,
@@ -108,6 +153,8 @@ vm *tach_create_state() {
     ret->callc = 0;
     ret->stacka = 64;
     ret->stackc = 0;
+
+    ret->backlevel = 0;
     
     ret->world = tach_malloc(sizeof(tach_mapping *) * ret->calla);
     ret->calls = tach_malloc(sizeof(uint32_t) * ret->calla);
@@ -153,6 +200,7 @@ void tach_vm_call(vm *state, tach_object *func, uint32_t argc, tach_object **arg
             break;
         }
         default: {
+            tach_clib_println(stdout, func);
             printf("error, cannot call that!\n");
             exit(1);
         }
@@ -170,7 +218,7 @@ void tach_interp(program *prog) {
                 char *name = prog->tach_strings[prog->opvalues[i]];
                 tach_object *nameobj = tach_create_tach_object_tach_string(tach_create_tach_string(name));
                 tach_object *obj = tach_get_tach_mapping(state->world[0], nameobj);
-                for (uint32_t i = state->callc; i > 0 && obj == NULL; i--) {
+                for (uint32_t i = state->callc-state->backlevel; i > 0 && obj == NULL; i--) {
                     obj = tach_get_tach_mapping(state->world[i], nameobj);
                 }
                 if (obj == NULL) {
