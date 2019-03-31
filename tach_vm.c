@@ -128,17 +128,17 @@ tach_mapping *tach_create_world_base() {
     tach_set_tach_mapping(
         tach_mapping,
         tach_create_tach_object_tach_string(tach_create_tach_string("true")),
-        trueobj
+        *trueobj
     );
     tach_set_tach_mapping(
         tach_mapping,
         tach_create_tach_object_tach_string(tach_create_tach_string("false")),
-        falseobj
+        *falseobj
     );
     return tach_mapping;
 }
 
-void tach_vm_push(vm *state, tach_object *o) {
+void tach_vm_push(vm *state, tach_object o) {
     if (state->stackc + 4 >= state->stacka) {
         state->stacka *= 1.5;
         state->stack = tach_realloc(state->stack, sizeof(tach_object *) * state->stacka);
@@ -163,20 +163,29 @@ vm *tach_create_state() {
     ret->world[0] = tach_create_world_base();
     ret->place = 0;
 
+    ret->error = NULL;
+
+    ret->common.objtrue.type = TACH_OBJECT_TYPE_BOOL;
+    ret->common.objfalse.type = TACH_OBJECT_TYPE_BOOL;
+    ret->common.objtrue.value.boolval = true;
+    ret->common.objfalse.value.boolval = false;
+    ret->common.objnil.type = TACH_OBJECT_TYPE_NIL;
+    ret->common.objnull.type = TACH_OBJECT_TYPE_NULL;
+
     return ret;
 }
 
 void tach_vm_except(vm *state) {
-    printf("error: %s\n", state->error->str);
+    printf("error: %s\n", state->error->str.str);
     state->error = NULL;
     exit(1);
 }
 
-void tach_vm_call(vm *state, tach_object *func, uint32_t argc, tach_object **argv) {
-    switch (func->type) {
+void tach_vm_call(vm *state, tach_object func, uint32_t argc, tach_object *argv) {
+    switch (func.type) {
         case TACH_OBJECT_TYPE_FUNC: {
-            tach_object *result = func->value.func(state, argc, argv);
-            if (result != NULL) {
+            tach_object result = func.value.func(state, argc, argv);
+            if (result.type != TACH_OBJECT_TYPE_NULL) {
                 tach_vm_push(state, result);
             }
             else if (state->error != NULL) {
@@ -193,9 +202,9 @@ void tach_vm_call(vm *state, tach_object *func, uint32_t argc, tach_object **arg
             state->calls[state->callc] = state->place;
             state->callc ++;
             state->world[state->callc] = tach_create_tach_mapping();
-            state->place = func->value.proc->gotoval;
-            for (uint32_t i = 0; i < func->value.proc->argc; i++) {
-                tach_set_tach_mapping(state->world[state->callc], func->value.proc->argn[i], argv[i]);
+            state->place = func.value.proc->gotoval;
+            for (uint32_t i = 0; i < func.value.proc->argc; i++) {
+                tach_set_tach_mapping(state->world[state->callc], func.value.proc->argn[i], argv[i]);
             }
             break;
         }
@@ -216,12 +225,16 @@ void tach_interp(program *prog) {
         switch (prog->opcodes[i]) {
             case OPCODE_NAME: {
                 char *name = prog->tach_strings[prog->opvalues[i]];
-                tach_object *nameobj = tach_create_tach_object_tach_string(tach_create_tach_string(name));
-                tach_object *obj = tach_get_tach_mapping(state->world[0], nameobj);
-                for (uint32_t i = state->callc-state->backlevel; i > 0 && obj == NULL; i--) {
-                    obj = tach_get_tach_mapping(state->world[i], nameobj);
+                tach_object strobj;
+                strobj.type = TACH_OBJECT_TYPE_TACH_STRING;
+                strobj.value.str = tach_create_tach_string(name);
+                tach_object obj = tach_get_tach_mapping(state->world[0], strobj);
+                uint32_t depth = 0;
+                for (uint32_t i = state->callc-state->backlevel; i > 0 && obj.type == TACH_OBJECT_TYPE_NULL; i--) {
+                    obj = tach_get_tach_mapping(state->world[i], strobj);
+                    depth ++;
                 }
-                if (obj == NULL) {
+                if (obj.type == TACH_OBJECT_TYPE_NULL) {
                     printf("error: no name %s\n", name);
                     exit(1);
                 }
@@ -234,7 +247,7 @@ void tach_interp(program *prog) {
                 break;
             }
             case OPCODE_PROC: {
-                tach_object *obj = tach_create_tach_object_proc(i);
+                tach_object obj = tach_create_tach_object_proc(i);
                 tach_vm_push(state, obj);
                 state->place += prog->opvalues[i] + 1;
                 break;
@@ -254,12 +267,12 @@ void tach_interp(program *prog) {
             }
             case OPCODE_CALL: {
                 uint32_t argc = prog->opvalues[i];
-                tach_object **args = tach_malloc(sizeof(tach_object *) * argc);
+                tach_object *args = tach_malloc(sizeof(tach_object) * argc);
                 for (uint32_t i = 0; i < argc; i++) {
                     args[argc-1-i] = state->stack[state->stackc-1];
                     state->stackc --;
                 }
-                tach_object *func = state->stack[state->stackc-1];
+                tach_object func = state->stack[state->stackc-1];
                 state->stackc --;
                 tach_vm_call(state, func, argc, args);
                 break;

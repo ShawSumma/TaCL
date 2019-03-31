@@ -34,7 +34,7 @@ program *tach_read(FILE *f) {
         if (!strcmp(opcode, "str")) {
             char str[256];
             int errc = fscanf(f, "%[^\n]", str);
-            char *mstr = tach_malloc(sizeof(char)*strlen(str));
+            char *mstr = tach_malloc(sizeof(char)*(strlen(str)+1));
             strcpy(mstr, str);
             tach_strings[tach_stringc] = mstr;
             values[size] = tach_stringc;
@@ -45,7 +45,7 @@ program *tach_read(FILE *f) {
         else if (!strcmp(opcode, "name")) {
             char str[256];
             int errc = fscanf(f, "%s\n", str);
-            char *mstr = tach_malloc(sizeof(char)*strlen(str));
+            char *mstr = tach_malloc(sizeof(char)*(strlen(str)+1));
             strcpy(mstr, str);
             tach_strings[tach_stringc] = mstr;
             values[size] = tach_stringc;

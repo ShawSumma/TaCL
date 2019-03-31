@@ -1,0 +1,6 @@
+proc range c {
+    if [lt 0 $c] {
+        range [sub $c 1]
+    } 
+}
+range 10000
