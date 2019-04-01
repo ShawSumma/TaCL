@@ -57,8 +57,8 @@ void tach_compile_more(tach_program *prog, tach_ast *ast) {
                 tach_compile_more(prog, ast->children[i]);
             } 
             prog->opcodes[prog->opcount] = OPCODE_RET;
+            prog->opvalues[beginc] = prog->opcount - beginc - 1;
             prog->opcount ++;
-            prog->opvalues[beginc] = prog->opcount - beginc;
             break;
         }
         default: {
@@ -76,7 +76,7 @@ void tach_compile_more(tach_program *prog, tach_ast *ast) {
     }
     if (prog->numberc + 4 < prog->numbera) {
         prog->numbera *= 1.5;
-        prog->numbers = tach_realloc(prog->numbers, sizeof(char *) * prog->numbera);
+        prog->numbers = tach_realloc(prog->numbers, sizeof(uint32_t) * prog->numbera);
     }
 }
 

@@ -133,7 +133,7 @@ tach_ast *tach_parse_single(tach_tokens *toks) {
     if (toks->types[toks->at] == TACH_TOKEN_DOLLAR) {
         tach_ast *ret = tach_malloc(sizeof(tach_ast));
         ret->type = TACH_AST_TYPE_NAME;
-        ret->str = toks->names[toks->at];
+        ret->str = toks->names[toks->at+1];
         toks->at += 2;
         return ret;
     }
@@ -175,11 +175,8 @@ tach_ast *tach_parse_command(tach_tokens *toks) {
     while (toks->at < toks->count
         && toks->types[toks->at] != TACH_TOKEN_END
         && toks->types[toks->at] != TACH_TOKEN_NEWLINE
-        && toks->types[toks->at] != TACH_TOKEN_CLOSE) {
-        if (toks->at == toks->count) {
-            ret->type = TACH_AST_TYPE_EMPTY;
-            return ret;
-        }
+        && toks->types[toks->at] != TACH_TOKEN_CLOSE
+        && toks->at != toks->count) {
         if (ret->count + 2 > alloc) {
             alloc *= 1.5;
             ret->children = tach_realloc(ret->children, sizeof(tach_ast *) * alloc);

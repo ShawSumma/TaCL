@@ -235,6 +235,7 @@ void tach_interp(tach_program *prog) {
 
     while (state->place < prog->opcount) {
         uint32_t i = state->place;
+        // printf("%s\n", tach_opcode_name(prog->opcodes[i]));
         switch (prog->opcodes[i]) {
             case OPCODE_NAME: {
                 char *name = prog->strings[prog->opvalues[i]];
