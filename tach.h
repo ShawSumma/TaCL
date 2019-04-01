@@ -26,12 +26,15 @@ enum opcode {
 typedef enum opcode opcode;
 
 enum tach_token_type {
-    TACH_TOKEN_DOLLAR,
     TACH_TOKEN_NEWLINE,
+
     TACH_TOKEN_STRING,
+    TACH_TOKEN_DOLLAR,
     TACH_TOKEN_NUMBER,
+
     TACH_TOKEN_OPEN,
     TACH_TOKEN_CLOSE,
+
     TACH_TOKEN_BEGIN,
     TACH_TOKEN_END,
 };
@@ -39,8 +42,13 @@ typedef enum tach_token_type tach_token_type;
 
 enum tach_ast_node_type {
     TACH_AST_TYPE_ERROR,
-    TACH_AST_TYPE_GROUP,
+
+    TACH_AST_TYPE_PROGRAM,
+    TACH_AST_TYPE_EMPTY,
+    TACH_AST_TYPE_BODY,
+
     TACH_AST_TYPE_COMMAND,
+    
     TACH_AST_TYPE_STRING,
     TACH_AST_TYPE_NAME,
     TACH_AST_TYPE_NUMBER,

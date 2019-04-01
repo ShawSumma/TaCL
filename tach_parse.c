@@ -107,3 +107,54 @@ tach_tokens *tach_tokenize_file(FILE *f) {
     }
     return ret;
 }
+
+tach_ast *tach_parse_command(tach_tokens *toks) {
+    tach_ast *ret = tach_malloc(sizeof(tach_ast));
+    uint32_t alloc = 4;
+    ret->children = tach_malloc(sizeof(tach_ast *) * alloc);
+    while (toks->at < ret->count && toks->types[toks->at] != TACH_TOKEN_NEWLINE) {
+        if (toks->at == ret->count) {
+            ret->type = TACH_AST_TYPE_EMPTY;
+            return ret;
+        }
+        if (ret->count + 2 > alloc) {
+            alloc *= 1.5;
+            ret->children = tach_realloc(ret->children, sizeof(tach_ast *) * alloc);
+        }
+        tach_ast *got = tach_parse_single(toks);
+        ret->children[ret->count] = got;
+        ret->count ++;
+    }
+    return ret;
+}
+
+tach_ast *tach_parse_body(tach_tokens *toks) {
+    tach_ast *ret = tach_malloc(sizeof(tach_ast));
+    ret->type = TACH_AST_TYPE_BODY;
+    uint32_t alloc = 4;
+    ret->children = tach_malloc(sizeof(tach_ast *) * alloc);
+    while (toks->at < ret->count && toks->types[toks->at] != TACH_TOKEN_END) {
+        if (toks->at == ret->count) {
+            ret->type = TACH_AST_TYPE_PROGRAM;
+            return ret;
+        }
+        if (ret->count + 2 > alloc) {
+            alloc *= 1.5;
+            ret->children = tach_realloc(ret->children, sizeof(tach_ast *) * alloc);
+        }
+        if (toks->types[toks->at] != TACH_TOKEN_NEWLINE) {
+            tach_ast *got = tach_parse_command(toks);
+            ret->children[ret->count] = got;
+            ret->count ++;
+        }
+        else {
+            toks->at ++;
+        }
+    }
+    return ret;
+}
+
+tach_ast *tach_parse_tokens(tach_tokens *f) {
+    f->at = 0;
+    return tach_parse_body(f);
+}
