@@ -22,7 +22,7 @@ char *tach_opcode_name(opcode op) {
     }
 }
 
-void tach_vm_error(vm *state, char *err) {
+void tach_vm_error(tach_vm *state, char *err) {
     state->error = tach_error_string(err);
 } 
 
@@ -148,7 +148,7 @@ tach_mapping *tach_create_world_base() {
     return tach_mapping;
 }
 
-void tach_vm_push(vm *state, tach_object o) {
+void tach_vm_push(tach_vm *state, tach_object o) {
     if (state->stackc + 4 >= state->stacka) {
         printf("grow\n");
         state->stacka *= 1.5;
@@ -158,8 +158,8 @@ void tach_vm_push(vm *state, tach_object o) {
     state->stackc ++;
 }
 
-vm *tach_create_state() {
-    vm *ret = tach_malloc(sizeof(vm));
+tach_vm *tach_create_state() {
+    tach_vm*ret = tach_malloc(sizeof(tach_vm));
     ret->calla = 64;
     ret->callc = 0;
     ret->stacka = 64;
@@ -186,13 +186,13 @@ vm *tach_create_state() {
     return ret;
 }
 
-void tach_vm_except(vm *state) {
+void tach_vm_except(tach_vm *state) {
     printf("error: %s\n", state->error->str.str);
     state->error = NULL;
     exit(1);
 }
 
-void tach_vm_call(vm *state, tach_object func, uint32_t argc, tach_object *argv) {
+void tach_vm_call(tach_vm *state, tach_object func, uint32_t argc, tach_object *argv) {
     switch (func.type) {
         case TACH_OBJECT_TYPE_FUNC: {
             tach_object result = func.value.func(state, argc, argv);
@@ -227,9 +227,9 @@ void tach_vm_call(vm *state, tach_object func, uint32_t argc, tach_object *argv)
     }
 }
 
-void tach_interp(program *prog) {
+void tach_interp(tach_program *prog) {
 
-    vm *state = tach_create_state();
+    tach_vm *state = tach_create_state();
 
     // uint64_t opc = 0;
 
@@ -237,7 +237,7 @@ void tach_interp(program *prog) {
         uint32_t i = state->place;
         switch (prog->opcodes[i]) {
             case OPCODE_NAME: {
-                char *name = prog->tach_strings[prog->opvalues[i]];
+                char *name = prog->strings[prog->opvalues[i]];
                 tach_object strobj;
                 strobj.type = TACH_OBJECT_TYPE_TACH_STRING;
                 strobj.value.str = tach_create_tach_string(name);
@@ -274,7 +274,7 @@ void tach_interp(program *prog) {
                 break;
             }
             case OPCODE_STR: {
-                char *name = prog->tach_strings[prog->opvalues[i]];
+                char *name = prog->strings[prog->opvalues[i]];
                 tach_vm_push(state, tach_create_tach_object_tach_string(tach_create_tach_string(name)));
                 break;
             }

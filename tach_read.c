@@ -1,7 +1,7 @@
 
 #include "tach.h"
 
-program *tach_read(FILE *f) {
+tach_program *tach_read(FILE *f) {
     uint32_t alloc = 8;
     uint32_t numbera = 8;
     uint32_t tach_stringa = 8;
@@ -95,11 +95,12 @@ program *tach_read(FILE *f) {
             exit(1);
         }
     }
-    program *prog = tach_malloc(sizeof(program));
+    tach_program *prog = tach_malloc(sizeof(tach_program));
     prog->opcodes = bytecode;
     prog->opvalues = values;
     prog->opcount = size;
-    prog->tach_strings = tach_strings;
+    prog->strings = tach_strings;
     prog->numbers = numbers;
+    prog->alloc = alloc;
     return prog;
 }

@@ -1,7 +1,7 @@
 #include "tach.h"
 
 
-tach_object tach_lib_print(vm *state, uint32_t argc, tach_object *objs) {
+tach_object tach_lib_print(tach_vm *state, uint32_t argc, tach_object *objs) {
     for (int i = 0; i < argc; i++) {
         if (i != 0) {
             fprintf(stdout, " ");
@@ -12,7 +12,7 @@ tach_object tach_lib_print(vm *state, uint32_t argc, tach_object *objs) {
     return state->common.objnil;
 }
 
-tach_object tach_lib_set(vm *state, uint32_t argc, tach_object *objs) {
+tach_object tach_lib_set(tach_vm *state, uint32_t argc, tach_object *objs) {
     if (argc != 2) {
         tach_vm_error(state, "set takes 2 arguments");
         return state->common.objnull;
@@ -21,7 +21,7 @@ tach_object tach_lib_set(vm *state, uint32_t argc, tach_object *objs) {
     return state->common.objnil;
 }
 
-tach_object tach_lib_get(vm *state, uint32_t argc, tach_object *objs) {
+tach_object tach_lib_get(tach_vm *state, uint32_t argc, tach_object *objs) {
     if (argc != 1) {
         tach_vm_error(state, "get takes 1 argument");
         return state->common.objnull;
@@ -37,7 +37,7 @@ tach_object tach_lib_get(vm *state, uint32_t argc, tach_object *objs) {
     return obj;
 }
 
-tach_object tach_lib_add(vm *state, uint32_t argc, tach_object *objs) {
+tach_object tach_lib_add(tach_vm *state, uint32_t argc, tach_object *objs) {
     if (argc != 2) {
         tach_vm_error(state, "add takes 2 numbers");
         return state->common.objnull;
@@ -52,7 +52,7 @@ tach_object tach_lib_add(vm *state, uint32_t argc, tach_object *objs) {
     return ret;
 }
 
-tach_object tach_lib_sub(vm *state, uint32_t argc, tach_object *objs) {
+tach_object tach_lib_sub(tach_vm *state, uint32_t argc, tach_object *objs) {
     if (argc != 2) {
         tach_vm_error(state, "sub takes 2 numbers");
         return state->common.objnull;
@@ -67,7 +67,7 @@ tach_object tach_lib_sub(vm *state, uint32_t argc, tach_object *objs) {
     return ret;
 }
 
-tach_object tach_lib_mul(vm *state, uint32_t argc, tach_object *objs) {
+tach_object tach_lib_mul(tach_vm *state, uint32_t argc, tach_object *objs) {
     if (argc != 2) {
         tach_vm_error(state, "mul takes 2 numbers");
         return state->common.objnull;
@@ -82,7 +82,7 @@ tach_object tach_lib_mul(vm *state, uint32_t argc, tach_object *objs) {
     return ret;
 }
 
-tach_object tach_lib_div(vm *state, uint32_t argc, tach_object *objs) {
+tach_object tach_lib_div(tach_vm *state, uint32_t argc, tach_object *objs) {
     if (argc != 2) {
         tach_vm_error(state, "div takes 2 numbers");
         return state->common.objnull;
@@ -98,7 +98,7 @@ tach_object tach_lib_div(vm *state, uint32_t argc, tach_object *objs) {
     return ret;
 }
 
-tach_object tach_lib_cmp(vm *state, uint32_t argc, tach_object *objs) {
+tach_object tach_lib_cmp(tach_vm *state, uint32_t argc, tach_object *objs) {
     if (argc != 2) {
         tach_vm_error(state, "cmp takes 2 arguments");
         return state->common.objnull;
@@ -109,7 +109,7 @@ tach_object tach_lib_cmp(vm *state, uint32_t argc, tach_object *objs) {
     return ret;
 }
 
-tach_object tach_lib_lt(vm *state, uint32_t argc, tach_object *objs) {
+tach_object tach_lib_lt(tach_vm *state, uint32_t argc, tach_object *objs) {
     if (argc != 2) {
         tach_vm_error(state, "lt takes 2 arguments");
         return state->common.objnull;
@@ -117,7 +117,7 @@ tach_object tach_lib_lt(vm *state, uint32_t argc, tach_object *objs) {
     return tach_clib_cmp(objs[0], objs[1]) == -1 ? state->common.objtrue : state->common.objfalse;
 }
 
-tach_object tach_lib_gt(vm *state, uint32_t argc, tach_object *objs) {
+tach_object tach_lib_gt(tach_vm *state, uint32_t argc, tach_object *objs) {
     if (argc != 2) {
         tach_vm_error(state, "gt takes 2 arguments");
         return state->common.objnull;
@@ -125,7 +125,7 @@ tach_object tach_lib_gt(vm *state, uint32_t argc, tach_object *objs) {
     return tach_clib_cmp(objs[0], objs[1]) == 1 ? state->common.objtrue : state->common.objfalse;
 }
 
-tach_object tach_lib_eq(vm *state, uint32_t argc, tach_object *objs) {
+tach_object tach_lib_eq(tach_vm *state, uint32_t argc, tach_object *objs) {
     if (argc != 2) {
         tach_vm_error(state, "eq takes 2 arguments");
         return state->common.objnull;
@@ -133,7 +133,7 @@ tach_object tach_lib_eq(vm *state, uint32_t argc, tach_object *objs) {
     return tach_clib_cmp(objs[0], objs[1]) == 0 ? state->common.objtrue : state->common.objfalse;
 }
 
-tach_object tach_lib_neq(vm *state, uint32_t argc, tach_object *objs) {
+tach_object tach_lib_neq(tach_vm *state, uint32_t argc, tach_object *objs) {
     if (argc != 2) {
         tach_vm_error(state, "neq takes 2 arguments");
         return state->common.objnull;
@@ -141,11 +141,11 @@ tach_object tach_lib_neq(vm *state, uint32_t argc, tach_object *objs) {
     return tach_clib_cmp(objs[0], objs[1]) != 0 ? state->common.objtrue : state->common.objfalse;
 }
 
-tach_object tach_lib_copy(vm *state, uint32_t argc, tach_object *objs) {
+tach_object tach_lib_copy(tach_vm *state, uint32_t argc, tach_object *objs) {
     return objs[argc-1];
 }
 
-tach_object tach_lib_proc(vm *state, uint32_t argc, tach_object *objs) {
+tach_object tach_lib_proc(tach_vm *state, uint32_t argc, tach_object *objs) {
     tach_object obj;
     obj.type = TACH_OBJECT_TYPE_PROC;
     obj.value.proc = tach_malloc(sizeof(tach_proc_t));
@@ -156,7 +156,7 @@ tach_object tach_lib_proc(vm *state, uint32_t argc, tach_object *objs) {
     return state->common.objnil;
 }
 
-tach_object tach_lib_if(vm *state, uint32_t argc, tach_object *argv) {
+tach_object tach_lib_if(tach_vm *state, uint32_t argc, tach_object *argv) {
     if (argc < 2 || argc > 3) {
         tach_vm_error(state, "if takes 2 or 3 arguments");
         return state->common.objnull;
@@ -172,7 +172,7 @@ tach_object tach_lib_if(vm *state, uint32_t argc, tach_object *argv) {
     return state->common.objnil;
 }
 
-tach_object tach_lib_depth(vm *state, uint32_t argc, tach_object *objs) {
+tach_object tach_lib_depth(tach_vm *state, uint32_t argc, tach_object *objs) {
     if (argc != 0) {
         tach_vm_error(state, "level takes no arguments");
     }
@@ -182,7 +182,7 @@ tach_object tach_lib_depth(vm *state, uint32_t argc, tach_object *objs) {
     return ret;
 }
 
-tach_object tach_lib_child(vm *state, uint32_t argc, tach_object *objs) {
+tach_object tach_lib_child(tach_vm *state, uint32_t argc, tach_object *objs) {
     if (argc >= 2) {
         tach_vm_error(state, "child takes no arguments");
     }
@@ -194,7 +194,7 @@ tach_object tach_lib_child(vm *state, uint32_t argc, tach_object *objs) {
     return state->common.objnil;
 }
 
-tach_object tach_lib_parent(vm *state, uint32_t argc, tach_object *objs) {
+tach_object tach_lib_parent(tach_vm *state, uint32_t argc, tach_object *objs) {
     if (argc >= 2) {
         tach_vm_error(state, "parent takes no arguments");
     }
@@ -206,7 +206,7 @@ tach_object tach_lib_parent(vm *state, uint32_t argc, tach_object *objs) {
     return state->common.objnil;
 }
 
-tach_object tach_lib_eval(vm *state, uint32_t argc, tach_object *objs) {
+tach_object tach_lib_eval(tach_vm *state, uint32_t argc, tach_object *objs) {
     if (argc != 1) {
         tach_vm_error(state, "eval takes 1 argument");
     }
@@ -214,7 +214,7 @@ tach_object tach_lib_eval(vm *state, uint32_t argc, tach_object *objs) {
     return state->common.objnil;
 }
 
-tach_object tach_lib_vector(vm *state, uint32_t argc, tach_object *objs) {
+tach_object tach_lib_vector(tach_vm *state, uint32_t argc, tach_object *objs) {
     tach_object ret;
     ret.type = TACH_OBJECT_TYPE_VECTOR;
     ret.value.vec.count = argc;
@@ -223,7 +223,7 @@ tach_object tach_lib_vector(vm *state, uint32_t argc, tach_object *objs) {
     return ret;
 }
 
-tach_object tach_lib_append(vm *state, uint32_t argc, tach_object *objs) {
+tach_object tach_lib_append(tach_vm *state, uint32_t argc, tach_object *objs) {
     if (argc == 2) {
         tach_object ret = objs[0];
         if (ret.value.vec.count + 4 >  ret.value.vec.alloc) {

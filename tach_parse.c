@@ -137,6 +137,7 @@ tach_ast *tach_parse_single(tach_tokens *toks) {
         toks->at ++;
         return ret;
     }
+    printf("error: parse cannot handle token\n");
 }
 
 tach_ast *tach_parse_command(tach_tokens *toks) {

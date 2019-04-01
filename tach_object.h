@@ -2,7 +2,7 @@
 
 #include "tach.h"
 
-typedef tach_object (*func_t)(vm *, uint32_t, tach_object *);
+typedef tach_object (*func_t)(tach_vm *, uint32_t, tach_object *);
 
 struct tach_proc_t {
     tach_object *argn;

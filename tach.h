@@ -8,10 +8,10 @@
 #include <stdbool.h>
 #include <string.h>
 
-struct vm;
-typedef struct vm vm;
-struct program;
-typedef struct program program;
+struct tach_vm;
+typedef struct tach_vm tach_vm;
+struct tach_program;
+typedef struct tach_program tach_program;
 
 enum opcode {
     OPCODE_ERR,
@@ -82,3 +82,4 @@ typedef struct tach_error tach_error;
 #include "tach_vm.h"
 #include "tach_errors.h"
 #include "tach_parse.h"
+#include "tach_comp.h"

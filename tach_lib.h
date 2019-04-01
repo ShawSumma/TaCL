@@ -2,31 +2,31 @@
 
 #include "tach.h"
 
-tach_object tach_lib_print(vm *state, uint32_t argc, tach_object *objs);
-tach_object tach_lib_set(vm *state, uint32_t argc, tach_object *objs);
-tach_object tach_lib_proc(vm *state, uint32_t argc, tach_object *objs);
+tach_object tach_lib_print(tach_vm *state, uint32_t argc, tach_object *objs);
+tach_object tach_lib_set(tach_vm *state, uint32_t argc, tach_object *objs);
+tach_object tach_lib_proc(tach_vm *state, uint32_t argc, tach_object *objs);
 
-tach_object tach_lib_add(vm *state, uint32_t argc, tach_object *objs);
-tach_object tach_lib_sub(vm *state, uint32_t argc, tach_object *objs);
-tach_object tach_lib_mul(vm *state, uint32_t argc, tach_object *objs);
-tach_object tach_lib_div(vm *state, uint32_t argc, tach_object *objs);
+tach_object tach_lib_add(tach_vm *state, uint32_t argc, tach_object *objs);
+tach_object tach_lib_sub(tach_vm *state, uint32_t argc, tach_object *objs);
+tach_object tach_lib_mul(tach_vm *state, uint32_t argc, tach_object *objs);
+tach_object tach_lib_div(tach_vm *state, uint32_t argc, tach_object *objs);
 
-tach_object tach_lib_lt(vm *state, uint32_t argc, tach_object *objs);
-tach_object tach_lib_gt(vm *state, uint32_t argc, tach_object *objs);
-tach_object tach_lib_eq(vm *state, uint32_t argc, tach_object *objs);
-tach_object tach_lib_neq(vm *state, uint32_t argc, tach_object *objs);
+tach_object tach_lib_lt(tach_vm *state, uint32_t argc, tach_object *objs);
+tach_object tach_lib_gt(tach_vm *state, uint32_t argc, tach_object *objs);
+tach_object tach_lib_eq(tach_vm *state, uint32_t argc, tach_object *objs);
+tach_object tach_lib_neq(tach_vm *state, uint32_t argc, tach_object *objs);
 
-tach_object tach_lib_if(vm *state, uint32_t argc, tach_object *objs);
+tach_object tach_lib_if(tach_vm *state, uint32_t argc, tach_object *objs);
 
-tach_object tach_lib_copy(vm *state, uint32_t argc, tach_object *objs);
+tach_object tach_lib_copy(tach_vm *state, uint32_t argc, tach_object *objs);
 
-tach_object tach_lib_parent(vm *state, uint32_t argc, tach_object *objs);
-tach_object tach_lib_child(vm *state, uint32_t argc, tach_object *objs);
-tach_object tach_lib_depth(vm *state, uint32_t argc, tach_object *objs);
-tach_object tach_lib_eval(vm *state, uint32_t argc, tach_object *objs);
+tach_object tach_lib_parent(tach_vm *state, uint32_t argc, tach_object *objs);
+tach_object tach_lib_child(tach_vm *state, uint32_t argc, tach_object *objs);
+tach_object tach_lib_depth(tach_vm *state, uint32_t argc, tach_object *objs);
+tach_object tach_lib_eval(tach_vm *state, uint32_t argc, tach_object *objs);
 
-tach_object tach_lib_get(vm *state, uint32_t argc, tach_object *objs);
+tach_object tach_lib_get(tach_vm *state, uint32_t argc, tach_object *objs);
 
-tach_object tach_lib_vector(vm *state, uint32_t argc, tach_object *objs);
-tach_object tach_lib_append(vm *state, uint32_t argc, tach_object *objs);
-tach_object tach_lib_index(vm *state, uint32_t argc, tach_object *objs);
+tach_object tach_lib_vector(tach_vm *state, uint32_t argc, tach_object *objs);
+tach_object tach_lib_append(tach_vm *state, uint32_t argc, tach_object *objs);
+tach_object tach_lib_index(tach_vm *state, uint32_t argc, tach_object *objs);

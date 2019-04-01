@@ -2,4 +2,4 @@
 
 #include "tach.h"
 
-program *tach_read(FILE *f);
+tach_program *tach_read(FILE *f);

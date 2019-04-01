@@ -2,7 +2,7 @@
 
 #include "tach.h"
 
-struct vm {
+struct tach_vm {
     struct {
         tach_object objnil;
         tach_object objtrue;
@@ -21,18 +21,23 @@ struct vm {
     uint32_t backlevel;
 };
 
-struct program {
+struct tach_program {
     uint32_t opcount;
+    uint32_t alloc;
+    uint32_t stringc;
+    uint32_t stringa;
+    uint32_t numberc;
+    uint32_t numbera;
     opcode *opcodes;
     uint32_t *opvalues;
     double *numbers;
-    char **tach_strings;
+    char **strings;
 };
 
-void tach_vm_push(vm *state, tach_object o);
+void tach_vm_push(tach_vm *state, tach_object o);
 char *tach_opcode_name(opcode op);
-void tach_vm_call(vm *state, tach_object func, uint32_t argc, tach_object *argv);
-void tach_interp(program *prog);
+void tach_vm_call(tach_vm *state, tach_object func, uint32_t argc, tach_object *argv);
+void tach_interp(tach_program *prog);
 tach_mapping *tach_create_world_base();
-vm *tach_create_state();
-void tach_vm_error(vm *state, char *err);
+tach_vm *tach_create_state();
+void tach_vm_error(tach_vm *state, char *err);
