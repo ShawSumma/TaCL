@@ -1,4 +1,4 @@
-if gcc -O3 -g *.c -o tach.exe -lgc
+if gcc -O0 -g *.c -o tach.exe -lgc
 then
     if python3 main.py -ec $1
     then

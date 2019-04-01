@@ -140,6 +140,7 @@ tach_mapping *tach_create_world_base() {
 
 void tach_vm_push(vm *state, tach_object o) {
     if (state->stackc + 4 >= state->stacka) {
+        printf("grow\n");
         state->stacka *= 1.5;
         state->stack = tach_realloc(state->stack, sizeof(tach_object *) * state->stacka);
     }
@@ -158,7 +159,7 @@ vm *tach_create_state() {
     
     ret->world = tach_malloc(sizeof(tach_mapping *) * ret->calla);
     ret->calls = tach_malloc(sizeof(uint32_t) * ret->calla);
-    ret->stack = tach_malloc(sizeof(tach_object *) * ret->stacka);
+    ret->stack = tach_malloc(sizeof(tach_object) * ret->stacka);
 
     ret->world[0] = tach_create_world_base();
     ret->place = 0;
@@ -220,6 +221,8 @@ void tach_interp(program *prog) {
 
     vm *state = tach_create_state();
 
+    // uint64_t opc = 0;
+
     while (state->place < prog->opcount) {
         uint32_t i = state->place;
         switch (prog->opcodes[i]) {
@@ -230,8 +233,8 @@ void tach_interp(program *prog) {
                 strobj.value.str = tach_create_tach_string(name);
                 tach_object obj = tach_get_tach_mapping(state->world[0], strobj);
                 uint32_t depth = 0;
-                for (uint32_t i = state->callc-state->backlevel; i > 0 && obj.type == TACH_OBJECT_TYPE_NULL; i--) {
-                    obj = tach_get_tach_mapping(state->world[i], strobj);
+                for (uint32_t j = state->callc-state->backlevel; j > 0 && obj.type == TACH_OBJECT_TYPE_NULL; j--) {
+                    obj = tach_get_tach_mapping(state->world[j], strobj);
                     depth ++;
                 }
                 if (obj.type == TACH_OBJECT_TYPE_NULL) {
