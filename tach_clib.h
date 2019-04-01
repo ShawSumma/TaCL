@@ -9,4 +9,5 @@ char tach_clib_cmp(tach_object a, tach_object b);
 bool tach_clib_tobool(tach_object obj);
 void tach_clib_print(FILE *f, tach_object obj);
 void tach_clib_println(FILE *f, tach_object obj);
+tach_object tach_clib_deepcopy(tach_object obj);
 

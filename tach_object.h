@@ -16,6 +16,13 @@ struct tach_string {
     uint32_t count;
 };
 
+struct tach_vector {
+    tach_object *children;
+    uint32_t count;
+    uint32_t alloc;
+};
+
+
 struct tach_object {
     enum {
         TACH_OBJECT_TYPE_NULL,
@@ -29,7 +36,7 @@ struct tach_object {
     } type;
     union {
         tach_string str;
-        tach_vector *vec;
+        tach_vector vec;
         tach_proc_t *proc;
         func_t func;
         double num;
@@ -42,11 +49,6 @@ struct tach_mapping {
     tach_object val;
     tach_mapping *left;
     tach_mapping *right;
-};
-
-struct tach_vector {
-    tach_object *children;
-    uint32_t count;
 };
 
 tach_mapping *tach_create_tach_mapping();

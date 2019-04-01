@@ -17,7 +17,7 @@ tach_object tach_lib_set(vm *state, uint32_t argc, tach_object *objs) {
         tach_vm_error(state, "set takes 2 arguments");
         return state->common.objnull;
     }
-    tach_set_tach_mapping(state->world[state->callc-state->backlevel], objs[0], objs[1]);
+    tach_set_tach_mapping(state->world[state->callc-state->backlevel], objs[0], tach_clib_deepcopy(objs[1]));
     return state->common.objnil;
 }
 
@@ -152,7 +152,7 @@ tach_object tach_lib_proc(vm *state, uint32_t argc, tach_object *objs) {
     obj.value.proc->argc = argc-2;
     obj.value.proc->argn = objs+1;
     obj.value.proc->gotoval = objs[argc-1].value.proc->gotoval;
-    tach_set_tach_mapping(state->world[state->callc-state->backlevel], objs[0], obj);
+    tach_set_tach_mapping(state->world[state->callc-state->backlevel], objs[0], tach_clib_deepcopy(obj));
     return state->common.objnil;
 }
 
@@ -212,4 +212,31 @@ tach_object tach_lib_eval(vm *state, uint32_t argc, tach_object *objs) {
     }
     tach_vm_call(state, objs[0], 0, NULL);
     return state->common.objnil;
+}
+
+tach_object tach_lib_vector(vm *state, uint32_t argc, tach_object *objs) {
+    tach_object ret;
+    ret.type = TACH_OBJECT_TYPE_VECTOR;
+    ret.value.vec.count = argc;
+    ret.value.vec.alloc = argc;
+    ret.value.vec.children = objs;
+    return ret;
+}
+
+tach_object tach_lib_append(vm *state, uint32_t argc, tach_object *objs) {
+    if (argc == 2) {
+        tach_object ret = objs[0];
+        if (ret.value.vec.count + 4 >  ret.value.vec.alloc) {
+            ret.value.vec.alloc *= 1.5;
+            ret.value.vec.alloc += 2;
+            ret.value.vec.children = tach_realloc(ret.value.vec.children, sizeof(tach_object) * ret.value.vec.alloc);
+        }
+        ret.value.vec.children[ret.value.vec.count] = objs[1];
+        ret.value.vec.count ++;
+        return ret;
+    }
+    else {
+        tach_vm_error(state, "append takes 2 arguments");
+        return state->common.objnil;
+    }
 }

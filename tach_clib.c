@@ -64,7 +64,12 @@ char tach_clib_cmp(tach_object a, tach_object b) {
 void tach_clib_print( FILE *f, tach_object obj) {
     switch (obj.type) {
         case TACH_OBJECT_TYPE_NUMBER:
-            fprintf(f, "%lf", obj.value.num);
+            if (fmod(obj.value.num, 1) == 0) {
+                fprintf(f, "%ld", (int64_t) obj.value.num);
+            }
+            else {
+                fprintf(f, "%lf", obj.value.num);
+            }
             break;
         case TACH_OBJECT_TYPE_TACH_STRING:
             fprintf(f, "%s", obj.value.str.str);
@@ -76,7 +81,14 @@ void tach_clib_print( FILE *f, tach_object obj) {
             fprintf(f, "(func %p)", obj.value.func);
             break;
         case TACH_OBJECT_TYPE_VECTOR:
-            fprintf(f, "(list)");
+            fprintf(f, "[vector ");
+            for (uint32_t i = 0; i < obj.value.vec.count; i++) {
+                if (i != 0) {
+                    fprintf(f, " ");
+                }
+                tach_clib_print(f,obj.value.vec.children[i]);
+            }
+            fprintf(f, "]");
             break;
         case TACH_OBJECT_TYPE_PROC:
             fprintf(f, "(proc %p)", obj.value.proc);      
@@ -85,6 +97,23 @@ void tach_clib_print( FILE *f, tach_object obj) {
             fprintf(f, "%s", obj.value.boolval ? "true" : "false");
             break;
     }
+}
+
+tach_object tach_clib_deepcopy(tach_object obj) {
+    tach_object ret;
+    ret.type = obj.type;
+    if (obj.type == TACH_OBJECT_TYPE_VECTOR) {
+        ret.value.vec.alloc = obj.value.vec.alloc;
+        ret.value.vec.count = obj.value.vec.count;
+        ret.value.vec.children = tach_malloc(sizeof(tach_object) * ret.value.vec.alloc);
+        for (uint32_t i = 0; i < ret.value.vec.count; i++) {
+            ret.value.vec.children[i] = tach_clib_deepcopy(obj.value.vec.children[i]);
+        }
+    }
+    else {
+        ret.value = obj.value;
+    }
+    return ret;
 }
 
 void tach_clib_println(FILE *f, tach_object obj) {

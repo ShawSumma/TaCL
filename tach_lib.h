@@ -26,3 +26,7 @@ tach_object tach_lib_depth(vm *state, uint32_t argc, tach_object *objs);
 tach_object tach_lib_eval(vm *state, uint32_t argc, tach_object *objs);
 
 tach_object tach_lib_get(vm *state, uint32_t argc, tach_object *objs);
+
+tach_object tach_lib_vector(vm *state, uint32_t argc, tach_object *objs);
+tach_object tach_lib_append(vm *state, uint32_t argc, tach_object *objs);
+tach_object tach_lib_index(vm *state, uint32_t argc, tach_object *objs);

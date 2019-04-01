@@ -127,6 +127,16 @@ tach_mapping *tach_create_world_base() {
     );
     tach_set_tach_mapping(
         tach_mapping,
+        tach_create_tach_object_tach_string(tach_create_tach_string("vector")),
+        tach_create_tach_object_func(tach_lib_vector)
+    );
+    tach_set_tach_mapping(
+        tach_mapping,
+        tach_create_tach_object_tach_string(tach_create_tach_string("append")),
+        tach_create_tach_object_func(tach_lib_append)
+    );
+    tach_set_tach_mapping(
+        tach_mapping,
         tach_create_tach_object_tach_string(tach_create_tach_string("true")),
         *trueobj
     );
