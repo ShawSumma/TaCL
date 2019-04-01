@@ -39,6 +39,18 @@ tach_tokens *tach_tokenize_file(FILE *f) {
             ret->count ++;
             got = getc(f);
         }
+        else if (got == '[') {
+            ret->names[ret->count] = "[";
+            ret->types[ret->count] = TACH_TOKEN_OPEN;
+            ret->count ++;
+            got = getc(f);
+        }
+        else if (got == ']') {
+            ret->names[ret->count] = "]";
+            ret->types[ret->count] = TACH_TOKEN_CLOSE;
+            ret->count ++;
+            got = getc(f);
+        }
         else if ((got >= '0' && got <= '9') || got == '-') {
             uint32_t allocn = 16;
             uint32_t count = 0;
@@ -110,7 +122,7 @@ tach_tokens *tach_tokenize_file(FILE *f) {
             ret->count ++;
         }
         else {
-            printf("error: cannot lex");
+            printf("error: cannot lex\n");
             exit(1);
         }
     }
@@ -118,33 +130,52 @@ tach_tokens *tach_tokenize_file(FILE *f) {
 }
 
 tach_ast *tach_parse_single(tach_tokens *toks) {
-    tach_ast *ret = tach_malloc(sizeof(tach_ast));
     if (toks->types[toks->at] == TACH_TOKEN_DOLLAR) {
+        tach_ast *ret = tach_malloc(sizeof(tach_ast));
         ret->type = TACH_AST_TYPE_NAME;
         ret->str = toks->names[toks->at];
         toks->at += 2;
         return ret;
     }
     if (toks->types[toks->at] == TACH_TOKEN_STRING) {
+        tach_ast *ret = tach_malloc(sizeof(tach_ast));
         ret->type = TACH_AST_TYPE_STRING;
         ret->str = toks->names[toks->at];
         toks->at ++;
         return ret;
     }
     if (toks->types[toks->at] == TACH_TOKEN_NUMBER) {
+        tach_ast *ret = tach_malloc(sizeof(tach_ast));
         ret->type = TACH_AST_TYPE_NUMBER;
         ret->str = toks->names[toks->at];
         toks->at ++;
         return ret;
     }
-    printf("error: parse cannot handle token\n");
+    if (toks->types[toks->at] == TACH_TOKEN_OPEN) {
+        toks->at ++;
+        tach_ast *ret = tach_parse_command(toks);
+        toks->at ++;
+        return ret;
+    }
+    if (toks->types[toks->at] == TACH_TOKEN_BEGIN) {
+        toks->at ++;
+        tach_ast *ret = tach_parse_body(toks);
+        toks->at ++;
+        return ret;
+    }
+    printf("error: parse cannot handle something\n");
+    exit(1);
 }
 
 tach_ast *tach_parse_command(tach_tokens *toks) {
     tach_ast *ret = tach_malloc(sizeof(tach_ast));
     uint32_t alloc = 4;
     ret->children = tach_malloc(sizeof(tach_ast *) * alloc);
-    while (toks->at < toks->count && toks->types[toks->at] != TACH_TOKEN_NEWLINE) {
+    ret->type = TACH_AST_TYPE_COMMAND;
+    while (toks->at < toks->count
+        && toks->types[toks->at] != TACH_TOKEN_END
+        && toks->types[toks->at] != TACH_TOKEN_NEWLINE
+        && toks->types[toks->at] != TACH_TOKEN_CLOSE) {
         if (toks->at == toks->count) {
             ret->type = TACH_AST_TYPE_EMPTY;
             return ret;
@@ -157,6 +188,12 @@ tach_ast *tach_parse_command(tach_tokens *toks) {
         ret->children[ret->count] = got;
         ret->count ++;
     }
+    if (ret->count == 0) {
+        ret->type = TACH_AST_TYPE_EMPTY;
+        toks->at ++;
+        return ret;
+    }
+    ret->children[0]->type = TACH_AST_TYPE_NAME;
     return ret;
 }
 
@@ -178,6 +215,9 @@ tach_ast *tach_parse_body(tach_tokens *toks) {
         else {
             toks->at ++;
         }
+    }
+    if (toks->at == toks->count) {
+        ret->type = TACH_AST_TYPE_PROGRAM;
     }
     return ret;
 }

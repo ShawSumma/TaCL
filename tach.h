@@ -42,9 +42,9 @@ typedef enum tach_token_type tach_token_type;
 
 enum tach_ast_node_type {
     TACH_AST_TYPE_ERROR,
+    TACH_AST_TYPE_EMPTY,
 
     TACH_AST_TYPE_PROGRAM,
-    TACH_AST_TYPE_EMPTY,
     TACH_AST_TYPE_BODY,
 
     TACH_AST_TYPE_COMMAND,
