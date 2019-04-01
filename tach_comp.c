@@ -1,6 +1,19 @@
 #include "tach.h"
 
 void tach_compile_more(tach_program *prog, tach_ast *ast) {
+    if (prog->opcount + 4 < prog->alloc) {
+        prog->alloc *= 1.5;
+        prog->opcodes = tach_realloc(prog->opcodes, sizeof(opcode) * prog->alloc);
+        prog->opvalues = tach_realloc(prog->opvalues, sizeof(uint32_t) * prog->alloc);
+    }
+    if (prog->stringc + 4 < prog->stringa) {
+        prog->stringa *= 1.5;
+        prog->strings = tach_realloc(prog->strings, sizeof(char *) * prog->stringa);
+    }
+    if (prog->numberc + 4 < prog->numbera) {
+        prog->numbera *= 1.5;
+        prog->numbers = tach_realloc(prog->numbers, sizeof(uint32_t) * prog->numbera);
+    }
     switch (ast->type) {
         case TACH_AST_TYPE_PROGRAM: {
             for (uint32_t i = 0; i < ast->count; i++) {
@@ -65,18 +78,6 @@ void tach_compile_more(tach_program *prog, tach_ast *ast) {
             printf("error: cannot handle ast type %d\n", ast->type);
             exit(1);
         }
-    }
-    if (prog->opcount + 4 < prog->alloc) {
-        prog->alloc *= 1.5;
-        prog->opcodes = tach_realloc(prog->opcodes, sizeof(opcode) * prog->alloc);
-    }
-    if (prog->stringc + 4 < prog->stringa) {
-        prog->stringa *= 1.5;
-        prog->strings = tach_realloc(prog->strings, sizeof(char *) * prog->stringa);
-    }
-    if (prog->numberc + 4 < prog->numbera) {
-        prog->numbera *= 1.5;
-        prog->numbers = tach_realloc(prog->numbers, sizeof(uint32_t) * prog->numbera);
     }
 }
 
