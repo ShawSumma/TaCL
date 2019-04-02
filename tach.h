@@ -78,7 +78,6 @@ typedef struct tach_error tach_error;
 #include "tach_lib.h"
 #include "tach_object.h"
 #include "tach_memory.h"
-#include "tach_read.h"
 #include "tach_vm.h"
 #include "tach_errors.h"
 #include "tach_parse.h"

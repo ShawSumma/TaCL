@@ -11,6 +11,7 @@ tach_tokens *tach_tokenize_file(FILE *f) {
         if (ret->count + 4 > ret->alloc) {
             ret->alloc *= 1.5;
             ret->names = tach_realloc(ret->names , sizeof(char *) * ret->alloc);
+            ret->types = tach_realloc(ret->types , sizeof(char *) * ret->alloc);
         }
         if (got == '\t' || got == ' ') {
             got = getc(f);
@@ -204,13 +205,13 @@ tach_ast *tach_parse_body(tach_tokens *toks) {
             alloc *= 1.5;
             ret->children = tach_realloc(ret->children, sizeof(tach_ast *) * alloc);
         }
-        if (toks->types[toks->at] != TACH_TOKEN_NEWLINE) {
+        if (toks->types[toks->at] == TACH_TOKEN_NEWLINE) {
+            toks->at ++;
+        }
+        else {
             tach_ast *got = tach_parse_command(toks);
             ret->children[ret->count] = got;
             ret->count ++;
-        }
-        else {
-            toks->at ++;
         }
     }
     if (toks->at == toks->count) {

@@ -150,9 +150,8 @@ tach_mapping *tach_create_world_base() {
 
 void tach_vm_push(tach_vm *state, tach_object o) {
     if (state->stackc + 4 >= state->stacka) {
-        printf("grow\n");
         state->stacka *= 1.5;
-        state->stack = tach_realloc(state->stack, sizeof(tach_object *) * state->stacka);
+        state->stack = tach_realloc(state->stack, sizeof(tach_object) * state->stacka);
     }
     state->stack[state->stackc] = o;
     state->stackc ++;
@@ -160,9 +159,9 @@ void tach_vm_push(tach_vm *state, tach_object o) {
 
 tach_vm *tach_create_state() {
     tach_vm*ret = tach_malloc(sizeof(tach_vm));
-    ret->calla = 64;
+    ret->calla = 8;
     ret->callc = 0;
-    ret->stacka = 64;
+    ret->stacka = 8;
     ret->stackc = 0;
 
     ret->backlevel = 0;
@@ -235,7 +234,7 @@ void tach_interp(tach_program *prog) {
 
     while (state->place < prog->opcount) {
         uint32_t i = state->place;
-        // printf("%s\n", tach_opcode_name(prog->opcodes[i]));
+        // printf("%d\t%s\n", i, tach_opcode_name(prog->opcodes[i]));
         switch (prog->opcodes[i]) {
             case OPCODE_NAME: {
                 char *name = prog->strings[prog->opvalues[i]];
