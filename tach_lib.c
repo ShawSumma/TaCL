@@ -142,7 +142,7 @@ tach_object tach_lib_neq(tach_vm *state, uint32_t argc, tach_object *objs) {
 }
 
 tach_object tach_lib_copy(tach_vm *state, uint32_t argc, tach_object *objs) {
-    return objs[argc-1];
+    return tach_clib_deepcopy(objs[argc-1]);
 }
 
 tach_object tach_lib_proc(tach_vm *state, uint32_t argc, tach_object *objs) {

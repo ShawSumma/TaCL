@@ -226,15 +226,9 @@ void tach_vm_call(tach_vm *state, tach_object func, uint32_t argc, tach_object *
     }
 }
 
-void tach_interp(tach_program *prog) {
-
-    tach_vm *state = tach_create_state();
-
-    // uint64_t opc = 0;
-
+void tach_interp(tach_program *prog, tach_vm *state) {
     while (state->place < prog->opcount) {
         uint32_t i = state->place;
-        // printf("%d\t%s\n", i, tach_opcode_name(prog->opcodes[i]));
         switch (prog->opcodes[i]) {
             case OPCODE_NAME: {
                 char *name = prog->strings[prog->opvalues[i]];

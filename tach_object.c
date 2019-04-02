@@ -7,12 +7,6 @@ tach_string tach_create_tach_string(char *si) {
     return str;
 }
 
-// tach_object *tach_create_tach_object_nil() {
-//     tach_object *ret = tach_malloc(sizeof(tach_object));
-//     ret->type = TACH_OBJECT_TYPE_NIL;
-//     return ret;
-// }
-
 tach_object tach_create_tach_object_tach_string(tach_string str) {
     tach_object ret;
     ret.type = TACH_OBJECT_TYPE_TACH_STRING;
@@ -33,13 +27,6 @@ tach_object tach_create_tach_object_func(func_t func) {
     ret.value.func = func;
     return ret;  
 }
-
-// tach_object *tach_create_tach_object_tach_vector(tach_vector *vec) {
-//     tach_object *ret = tach_malloc(sizeof(tach_object));
-//     ret->type = TACH_OBJECT_TYPE_VECTOR;
-//     ret->value.vec = vec;
-//     return ret;  
-// }
 
 tach_object tach_create_tach_object_proc(uint32_t val) {
     tach_object ret;

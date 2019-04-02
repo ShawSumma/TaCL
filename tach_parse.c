@@ -7,7 +7,7 @@ tach_tokens *tach_tokenize_file(FILE *f) {
     ret->names = tach_malloc(sizeof(char *) * ret->alloc);
     ret->types = tach_malloc(sizeof(tach_token_type) * ret->alloc);
     char got = getc(f);
-    while (got != EOF) {
+    while (got != EOF && got != '\0') {
         if (ret->count + 4 > ret->alloc) {
             ret->alloc *= 1.5;
             ret->names = tach_realloc(ret->names , sizeof(char *) * ret->alloc);

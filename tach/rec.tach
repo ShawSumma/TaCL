@@ -1,7 +1,6 @@
 proc recursive x {
-    print $x
     if [neq $x 0] {
         recursive [sub $x 1]
     }
 }
-recursive 1000
+recursive 1000000

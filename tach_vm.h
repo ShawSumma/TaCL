@@ -37,7 +37,7 @@ struct tach_program {
 void tach_vm_push(tach_vm *state, tach_object o);
 char *tach_opcode_name(opcode op);
 void tach_vm_call(tach_vm *state, tach_object func, uint32_t argc, tach_object *argv);
-void tach_interp(tach_program *prog);
+void tach_interp(tach_program *prog, tach_vm *state);
 tach_mapping *tach_create_world_base();
 tach_vm *tach_create_state();
 void tach_vm_error(tach_vm *state, char *err);
